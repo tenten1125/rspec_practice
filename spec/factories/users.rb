@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
-    name { "MyString" }
-    age { 1 }
-    email { "MyString" }
+    name { Faker::Name.name }
+    age { rand(121) }
+    email { Faker::Internet.unique.email }
   end
 end
