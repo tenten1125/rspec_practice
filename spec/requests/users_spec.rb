@@ -24,10 +24,36 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  describe 'GET /create' do
-    it 'returns http success' do
-      get '/users/create'
-      expect(response).to have_http_status(:success)
+  describe 'GET #create' do
+    subject { post(users_path, params: params) }
+    context 'パラメータが正常なとき' do
+      let(:params) { { user: attributes_for(:user) } }
+      it 'リクエストが成功する' do
+        subject
+        expect(response).to have_http_status(302)
+      end
+      it 'ユーザーが保存される' do
+        expect { subject }.to change { User.count }.by(1)
+      end
+      it '詳細ページにリダイレクトされる' do
+        subject
+        expect(response).to redirect_to User.last
+      end
+    end
+
+    context 'パラメータが異常なとき' do
+      let(:params) { { user: attributes_for(:user, :invalid) } }
+      it 'リクエストが成功する' do
+        subject
+        expect(response).to have_http_status(200)
+      end
+      it 'ユーザーが保存されない' do
+        expect { subject }.to change(User, :count)
+      end
+      it '新規登録ページがレンダリングされる' do
+        subject
+        expect(response.body).to include '新規登録'
+      end
     end
   end
 
