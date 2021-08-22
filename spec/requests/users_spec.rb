@@ -17,10 +17,10 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  describe 'GET /new' do
-    it 'returns http success' do
-      get '/users/new'
-      expect(response).to have_http_status(:success)
+  describe 'GET #new' do
+    it 'リクエストが成功する' do
+      get(new_user_path)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -32,10 +32,9 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'GET #show' do
-    subject { get(user_path(user_id)) }
+    subject { get(user_path(user.id)) }
     context 'ユーザーが存在するとき' do
       let(:user) { create(:user) }
-      let(:user_id) { user.id }
       it 'リクエストが成功する' do
         subject
         expect(response).to have_http_status(:ok)
