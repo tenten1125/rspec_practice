@@ -80,10 +80,31 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  describe 'GET /edit' do
-    it 'returns http success' do
-      get '/users/edit'
-      expect(response).to have_http_status(:success)
+  describe 'GET #edit' do
+    subject { get(edit_user_path(user_id)) }
+    context 'ユーザーが存在するとき' do
+      let(:user) { create(:user) }
+      let(:user_id) { user.id }
+
+      it 'リクエストが成功する' do
+        subject
+        expect(response).to have_http_status(200)
+      end
+
+      it 'nameが表示されている' do
+        subject
+        expect(response.body).to include user.name
+      end
+
+      it 'ageが表示されている' do
+        subject
+        expect(response.body).to include user.age.to_s
+      end
+
+      it 'emailが表示されている' do
+        subject
+        expect(response.body).to include user.email
+      end
     end
   end
 
